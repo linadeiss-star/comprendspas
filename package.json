@@ -1,0 +1,23 @@
+{
+  "name": "comprends-pas",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro build",
+    "preview": "astro preview --host 127.0.0.1",
+    "check": "astro check",
+    "test:smoke": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.13.0",
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@playwright/test": "^1.63.0",
+    "@types/leaflet": "^1.9.20",
+    "typescript": "^5.9.2"
+  }
+}

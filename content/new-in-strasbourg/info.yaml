@@ -1,0 +1,9 @@
+date: 2026-09-25
+template: diary
+kinds: [diary]
+cover: "petite-france.jpg"
+location:
+  name: "La Petite France"
+  lat: 48.5806
+  lng: 7.7403
+draft: false

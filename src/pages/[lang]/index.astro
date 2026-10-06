@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryMap from '../../components/EntryMap.astro';
+import type { Language } from '../../lib/i18n';
+export function getStaticPaths() { return ['de', 'fr'].map(lang => ({ params: { lang } })); }
+const language = Astro.params.lang as Language;
+---
+<Base active="map" language={language} mapPage><EntryMap language={language} /></Base>

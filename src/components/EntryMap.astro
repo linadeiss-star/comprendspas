@@ -1,0 +1,63 @@
+﻿---
+import { publishedEntries, url, photoUrl, entrySlug } from '../lib/content';
+import { words, localePath, type Language } from '../lib/i18n';
+interface Props { language?: Language }
+const { language = 'en' } = Astro.props;
+const t = words[language];
+const entries = await publishedEntries(language);
+---
+<section class="entry-map" id="entry-map">
+  <h1 class="sr-only">{t.map} — {t.strasbourg}</h1>
+  <div class="entry-map-canvas" role="region" aria-label={t.map}></div>
+  {entries.map(entry => {
+    const place = entry.data.location;
+    return <template data-lat={place.lat} data-lng={place.lng} data-place={entry.data.translationKey} data-kinds={entry.data.kinds.join(' ')}>
+      <a class="map-story-preview" href={url(`journal/${entrySlug(entry)}/`)}>
+        <img src={photoUrl(entry.data.cover)} alt={entry.data.coverAlt} width="280" height="135" />
+        <div><span class="entry-kinds">{entry.data.kinds.map(kind => kind === 'diary' ? t.diaryKind : t.spotKind).join(' + ')}</span><h2>{entry.data.title}</h2><p>{entry.data.description}</p><span class="preview-read">{t.read}</span></div>
+      </a>
+    </template>;
+  })}
+  <p class="map-error" role="status" hidden>{t.unavailable} <a href={url(localePath(language, 'journal/'))}>{t.diary}</a></p>
+  <noscript><p class="map-error"><a href={url(localePath(language, 'journal/'))}>{t.diary}</a></p></noscript>
+  <a class="map-photo-credits" href={url('credits/')}>{t.credits}</a>
+</section>
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+  const root = document.querySelector<HTMLElement>('#entry-map')!;
+  const canvas = root.querySelector<HTMLElement>('.entry-map-canvas')!;
+  const error = root.querySelector<HTMLElement>('.map-error')!;
+  const map = L.map(canvas, { zoomControl: false }).setView([48.581, 7.745], 15);
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+  const key = import.meta.env.PUBLIC_CARTO_KEY;
+  const osm = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+  L.tileLayer(key
+    ? `https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${encodeURIComponent(key)}`
+    : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: key ? 20 : 19,
+    attribution: key ? `${osm} &copy; <a href="https://carto.com/attribution/">CARTO</a>` : `${osm} contributors`,
+  }).on('tileerror', () => { error.hidden = false; }).on('tileload', () => { error.hidden = true; }).addTo(map);
+  const markers = Array.from(root.querySelectorAll('template')).map(template => {
+    const preview = template.content.firstElementChild!.cloneNode(true) as HTMLAnchorElement;
+    const title = preview.querySelector('h2')!.textContent!;
+    const thumbnail = preview.querySelector('img')!.cloneNode() as HTMLImageElement;
+    thumbnail.alt = '';
+    const kind = template.dataset.kinds!;
+    const marker = L.marker([Number(template.dataset.lat), Number(template.dataset.lng)], {
+      icon: L.divIcon({ className: `entry-pin ${kind}`, html: thumbnail, iconSize: [60, 60], iconAnchor: [30, 60], popupAnchor: [0, -58] }),
+      title, alt: title, riseOnHover: true,
+    }).addTo(map).bindPopup(preview, { className: 'story-popup', maxWidth: 280, minWidth: 260 });
+    marker.on('mouseover', () => marker.openPopup());
+    marker.on('click', () => {
+      if (matchMedia('(hover: hover) and (pointer: fine)').matches) location.assign(preview.href);
+      else marker.openPopup();
+    });
+    marker.getElement()?.addEventListener('focus', () => marker.openPopup());
+    if (new URLSearchParams(location.search).get('place') === template.dataset.place) marker.openPopup();
+    return marker;
+  });
+  if (markers.length) map.fitBounds(L.latLngBounds(markers.map(marker => marker.getLatLng())), { padding: [65, 90], maxZoom: 16 });
+  new ResizeObserver(() => map.invalidateSize()).observe(canvas);
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') map.closePopup(); });
+</script>

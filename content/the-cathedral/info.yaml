@@ -1,0 +1,10 @@
+date: 2026-09-21
+template: spot
+kinds: [spot]
+cover: "cathedral.jpg"
+location:
+  name: "Strasbourg Cathedral"
+  lat: 48.5818
+  lng: 7.7509
+draft: false
+sample: true

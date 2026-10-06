@@ -1,0 +1,23 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import DiaryLayout from '../../layouts/DiaryLayout.astro';
+import SpotLayout from '../../layouts/SpotLayout.astro';
+import Media from '../../components/Media.astro';
+import { publishedEntries, url, entrySlug, type Entry } from '../../lib/content';
+import { words, localePath, type Language } from '../../lib/i18n';
+export async function getStaticPaths() { return (await publishedEntries()).map(entry => ({ params: { id: entrySlug(entry) }, props: { entry } })); }
+interface Props { entry: Entry }
+const { entry } = Astro.props;
+const language = entry.data.language;
+const t = words[language];
+const translations: Partial<Record<Language, string>> = Object.fromEntries((await publishedEntries()).filter(other => other.data.translationKey === entry.data.translationKey).map(other => [other.data.language, url(`journal/${entrySlug(other)}/`)]));
+const { Content } = await render(entry);
+const layouts = { diary: DiaryLayout, spot: SpotLayout };
+const Layout = layouts[entry.data.template];
+---
+<Base title={entry.data.title} description={entry.data.description} active="journal" language={language} translations={translations}>
+  <div class="article-back wrap"><a href={url(localePath(language))}>{t.back}</a>{entry.data.sample && <span class="sample-label">{t.sample}</span>}</div>
+  <Layout entry={entry}><Content /></Layout>
+  {(entry.data.youtube || entry.data.instagram) && <section class="media-section wrap" aria-label="More from this story"><Media youtube={entry.data.youtube} instagram={entry.data.instagram} /></section>}
+</Base>

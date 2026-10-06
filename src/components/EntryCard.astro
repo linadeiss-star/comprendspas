@@ -1,0 +1,16 @@
+---
+import { url, photoUrl, entrySlug, type Entry } from '../lib/content';
+import { words } from '../lib/i18n';
+interface Props { entry: Entry; index?: number }
+const { entry, index = 0 } = Astro.props;
+const t = words[entry.data.language];
+---
+<article class="entry-card" data-type={entry.data.template}>
+  <a href={url(`journal/${entrySlug(entry)}/`)} class="card-image-link" tabindex="-1" aria-hidden="true">
+    <img src={photoUrl(entry.data.cover)} alt="" width="800" height="600" loading="lazy" />
+    <span class="image-number">0{index + 1}</span>
+  </a>
+  <div class="card-meta"><span>{entry.data.kinds.map(kind => kind === 'diary' ? t.diaryKind : t.spotKind).join(' + ')}</span><time datetime={entry.data.date.toISOString()}>{entry.data.date.toLocaleDateString(t.dateLocale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</time></div>
+  <h3><a href={url(`journal/${entrySlug(entry)}/`)}>{entry.data.title}</a></h3>
+  <p>{entry.data.description}</p>
+</article>

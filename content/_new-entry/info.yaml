@@ -1,0 +1,9 @@
+date: 2026-10-06
+template: diary
+kinds: [diary]
+cover: "cover.jpg"
+location:
+  name: "Your place name"
+  lat: 48.5806
+  lng: 7.7403
+draft: true

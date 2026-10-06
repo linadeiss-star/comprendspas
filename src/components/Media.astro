@@ -1,0 +1,23 @@
+---
+interface Props { youtube?: string; instagram?: string }
+const { youtube, instagram } = Astro.props;
+---
+{youtube && <div class="video-block" data-video={youtube}>
+  <button class="video-load" type="button"><span class="play-icon" aria-hidden="true">▶</span><strong>Watch the video</strong><span>Load the YouTube player</span></button>
+  <p class="media-note">The player connects to YouTube only when you choose to load it. <a href={`https://www.youtube.com/watch?v=${youtube}`} target="_blank" rel="noopener noreferrer">Watch on YouTube</a>.</p>
+</div>}
+{instagram && <a class="button button-outline" href={instagram} target="_blank" rel="noopener noreferrer">View on Instagram <span class="sr-only">(new tab)</span></a>}
+<script>
+  document.querySelectorAll<HTMLElement>('[data-video]').forEach(block => {
+    block.querySelector('button')?.addEventListener('click', event => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${block.dataset.video}`;
+      iframe.title = 'YouTube video player';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      (event.currentTarget as HTMLButtonElement).replaceWith(iframe);
+      iframe.focus();
+    });
+  });
+</script>

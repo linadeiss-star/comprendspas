@@ -1,0 +1,12 @@
+---
+import { photoUrl, type Entry } from '../lib/content';
+import { words } from '../lib/i18n';
+interface Props { entry: Entry }
+const { entry } = Astro.props;
+const t = words[entry.data.language];
+---
+<article class="diary-layout">
+  <header class="article-heading wrap"><p class="eyebrow">{t.diary} <span> / </span> <time datetime={entry.data.date.toISOString()}>{entry.data.date.toLocaleDateString(t.dateLocale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</time></p><h1>{entry.data.title}</h1><p class="article-deck">{entry.data.description}</p></header>
+  <figure class="article-cover wrap"><img src={photoUrl(entry.data.cover)} alt={entry.data.coverAlt} width="1400" height="790" fetchpriority="high" /><figcaption>{t.strasbourg} / {t.chapter}</figcaption></figure>
+  <div class="reading-layout wrap"><aside class="margin-note"><span class="eyebrow">{t.wordsHere}</span><span class="handwritten">Bienvenue.</span></aside><div class="prose"><slot /></div></div>
+</article>

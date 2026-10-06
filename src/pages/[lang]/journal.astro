@@ -1,0 +1,11 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryCard from '../../components/EntryCard.astro';
+import { publishedEntries } from '../../lib/content';
+import { words, type Language } from '../../lib/i18n';
+export function getStaticPaths() { return ['de', 'fr'].map(lang => ({ params: { lang } })); }
+const language = Astro.params.lang as Language;
+const t = words[language];
+const entries = await publishedEntries(language);
+---
+<Base title={t.diary} active="journal" language={language}><section class="wrap page-section"><header class="page-heading"><span class="eyebrow">{t.journalIntro}</span><h1>{t.diary}<span class="brand-dot">.</span></h1><p>{t.journalDescription}</p></header><div class="entry-grid">{entries.map((entry, index) => <EntryCard entry={entry} index={index} />)}</div></section></Base>

@@ -1,0 +1,7 @@
+---
+import Base from '../../layouts/Base.astro';
+import EntryCard from '../../components/EntryCard.astro';
+import { publishedEntries } from '../../lib/content';
+const entries = await publishedEntries('en');
+---
+<Base title="The diary" active="journal"><section class="wrap page-section"><header class="page-heading"><span class="eyebrow">Life, in a new language</span><h1>The diary<span class="brand-dot">.</span></h1><p>Thoughts from a newcomer. Small discoveries. A work in progress.</p></header><div class="entry-grid">{entries.map((entry, index) => <EntryCard entry={entry} index={index} />)}</div></section></Base>
