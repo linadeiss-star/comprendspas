@@ -35,7 +35,6 @@ jobs:
           ASTRO_TELEMETRY_DISABLED: '1'
           SITE_URL: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
-          PUBLIC_CARTO_KEY: ${{ vars.PUBLIC_CARTO_KEY }}
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist
