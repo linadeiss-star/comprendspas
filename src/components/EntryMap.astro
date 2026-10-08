@@ -24,6 +24,7 @@ const entries = await publishedEntries(language);
 </section>
 <script>
   import L from 'leaflet';
+  import { addColorAreas } from '../lib/map-color-areas';
   import { maplibreGL } from '@maplibre/maplibre-gl-leaflet';
   import { setWorkerUrl, type StyleSpecification } from 'maplibre-gl';
   import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
@@ -33,7 +34,7 @@ const entries = await publishedEntries(language);
   const root = document.querySelector<HTMLElement>('#entry-map')!;
   const canvas = root.querySelector<HTMLElement>('.entry-map-canvas')!;
   const error = root.querySelector<HTMLElement>('.map-error')!;
-  const map = L.map(canvas, { zoomControl: false }).setView([48.581, 7.745], 15);
+  const map = L.map(canvas, { zoomControl: false, zoomAnimation: false }).setView([48.581, 7.745], 15);
   L.control.zoom({ position: 'bottomright' }).addTo(map);
   map.setMaxZoom(19);
   async function loadBackground() {
@@ -41,11 +42,21 @@ const entries = await publishedEntries(language);
       const response = await fetch('https://tiles.openfreemap.org/styles/positron');
       if (!response.ok) throw new Error('Map style unavailable');
       const style: StyleSpecification = await response.json();
-      // Keep street and city names, but hide businesses, amenities, and map icons.
+      // Keep geographic labels, but hide street names, amenities, and map icons.
       style.layers = style.layers.filter(layer => !('source-layer' in layer &&
-        ['poi', 'aerodrome_label'].includes(layer['source-layer'] || '')));
+        ['poi', 'aerodrome_label', 'transportation_name'].includes(layer['source-layer'] || '')));
+      const colors: Record<string, string> = {
+        water: '#90c5ce', park: '#c3d5ac', landcover_wood: '#b7cda0',
+        building: '#e5c5a8', landuse_residential: '#eee1cf',
+      };
       for (const layer of style.layers) {
         if (layer.type === 'symbol' && layer.layout) delete layer.layout['icon-image'];
+        if (layer.type === 'fill' && colors[layer.id]) {
+          layer.paint = { ...layer.paint, 'fill-color': colors[layer.id] };
+        }
+        if (layer.id === 'waterway' && layer.type === 'line') {
+          layer.paint = { ...layer.paint, 'line-color': colors.water };
+        }
       }
       const background = maplibreGL({ style }).addTo(map).getMaplibreMap();
       background.on('error', () => { error.hidden = false; });
@@ -75,6 +86,7 @@ const entries = await publishedEntries(language);
     return marker;
   });
   if (markers.length) map.fitBounds(L.latLngBounds(markers.map(marker => marker.getLatLng())), { padding: [65, 90], maxZoom: 16 });
+  addColorAreas(map, markers.map(marker => marker.getLatLng()));
   new ResizeObserver(() => map.invalidateSize()).observe(canvas);
   document.addEventListener('keydown', event => { if (event.key === 'Escape') map.closePopup(); });
 </script>

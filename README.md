@@ -31,9 +31,9 @@ Astro reads shared metadata from content/*/info.yaml and text from the language 
 
 Hover or keyboard-focus a pin for a preview; click to open the entry. On touch screens, tap the pin, then the preview. There are no map cards, lists, or filters. With JavaScript disabled or tiles unavailable, the diary link provides access to the entries.
 
-The background uses **OpenFreeMap Positron**, rendered through MapLibre in Leaflet. It needs no account or API key and works on GitHub Pages. The background is grayscale; entry photos and category colours remain unchanged.
+The background uses **OpenFreeMap Positron**, rendered through MapLibre in Leaflet. It needs no account or API key and works on GitHub Pages. Soft, irregular areas around entries reveal pastel map colours against a grayscale background. Nearby areas blend together and stay anchored to their locations when panning or zooming. Entry photos and category colours remain unchanged.
 
-Business/amenity layers and map icons are hidden, while street and city names remain. Map tiles load from https://openfreemap.org/; the source attribution remains visible.
+Business/amenity layers, map icons, and street names are hidden; city, neighbourhood, and water labels remain. Map tiles load from https://openfreemap.org/; the source attribution remains visible. Browsers without backdrop-filter support keep a grayscale map. The colour-area effect is in `src/lib/map-color-areas.ts`; it uses no extra dependencies or tile downloads.
 
 ## GitHub Pages
 
