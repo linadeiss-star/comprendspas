@@ -1,0 +1,20 @@
+Website Anpassungen:
+
+-Header (siehe extra Datei)
+
+-Nur „Map“& „Diary“ ohne „the“ davor
+	oHier auch Zusatz: „about me“
+
+-Instagram link hinzufügen: https://www.instagram.com/com.prends_pas?utm_source=qr&vrfl=ZHAzODlqZnh2cHh5
+
+-Erstmal keine flaggen bei den sprachumstellungen -> finde es für jetzt gut so!
+- aber die sprachenkästchen in passender farbe zum header (rot)
+
+-Wenn möglich Karte nicht klinisch schwarz-weiß, sondern farblich eher wie aktueller header (warm)
+
+-Kartenfarben schöner, wenn möglich -> dunkler und wärmer
+
+-„favourite spot“ – Farbe für Kartenpin: waldgrün (dunkles warmens grün)
+-„Diary“ – Farbe für Kartenpin: weinrot
+
+-Kartenkoordinaten bei den textbeiträgen jeweils unter dem/ den Bild(ern)

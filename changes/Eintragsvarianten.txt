@@ -1,0 +1,11 @@
+Eintragsvarianten:
+
+1.	Ein Bild rechts + Text (wie bsp. Auf aktueller website)
+2.	Ein bild links + Text (wie bsp. Auf aktueller website)
+3.	Text über die ganze Fläche dann 3 kleine Bilder dann wieder Text (Bilder wie in einer Gallerie gelayert)
+4.	2 Bilder in Text integriert, eins links eins rechts (Text, Text+Bild rechts, Text, Text+Bild links)
+5.	Gleiches wie 4 aber andersrum (Text, Text+Bild links, Text, Text+Bild rechts)
+6.	Überschrift, dann 1 Bild, dann Text (wie Bsp diary auf aktueller website)
+7.	Überschrift, dann 2 Bilder, dann Text
+8.	Überschrift, dann 3 Bilder, dann Text
+9.	Überschrift, dann 5 Bilder (ein größeres bild in der mitte, jeweils 2 kleinere rechts und links daneben), dann Text
